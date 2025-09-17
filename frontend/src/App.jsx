@@ -28,7 +28,8 @@ import {
   Notifications as NotificationsIcon,
   Warning as WarningIcon,
   CheckCircle as CheckCircleIcon,
-  Videocam as VideocamIcon
+  Videocam as VideocamIcon,
+  Terrain as TerrainIcon
 } from '@mui/icons-material'
 import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast'
@@ -39,6 +40,7 @@ import Detection from './pages/Detection'
 import RiskAssessment from './pages/RiskAssessment'
 import Settings from './pages/Settings'
 import LiveMonitoring from './pages/LiveMonitoring'
+import DEMAnalysis from './pages/DEMAnalysis'
 
 // WebSocket hook for real-time updates
 import useWebSocket from './hooks/useWebSocket'
@@ -80,6 +82,12 @@ function App() {
       color: '#ef4444'
     },
     {
+      text: 'DEM Analysis',
+      icon: <TerrainIcon />,
+      path: 'dem-analysis',
+      color: '#10b981'
+    },
+    {
       text: 'Rock Detection',
       icon: <CameraIcon />,
       path: 'detection',
@@ -89,7 +97,7 @@ function App() {
       text: 'Risk Assessment',
       icon: <AssessmentIcon />,
       path: 'risk-assessment',
-      color: '#10b981'
+      color: '#f59e0b'
     },
     {
       text: 'Settings',
@@ -278,6 +286,8 @@ function App() {
         return <Dashboard {...pageProps} />
       case 'live-monitoring':
         return <LiveMonitoring {...pageProps} />
+      case 'dem-analysis':
+        return <DEMAnalysis {...pageProps} />
       case 'detection':
         return <Detection {...pageProps} />
       case 'risk-assessment':

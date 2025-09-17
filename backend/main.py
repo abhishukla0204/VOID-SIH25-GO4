@@ -853,6 +853,218 @@ async def get_camera_detections(direction: str):
         "last_updated": datetime.now().isoformat()
     }
 
+# DEM Analysis endpoints
+@app.get("/api/dem/files")
+async def get_dem_files():
+    """Get list of available DEM files"""
+    dem_files = [
+        {
+            "id": "bingham_canyon",
+            "name": "Bingham Canyon Mine",
+            "location": "Utah, USA",
+            "description": "Large open-pit copper mine with significant terrain variations",
+            "file_path": "data/DEM/Bingham_Canyon_Mine.tif"
+        },
+        {
+            "id": "chuquicamata",
+            "name": "Chuquicamata Copper Mine", 
+            "location": "Chile",
+            "description": "One of the largest open-pit mines in the world",
+            "file_path": "data/DEM/Chuquicamata_copper_Mine.tif"
+        },
+        {
+            "id": "grasberg",
+            "name": "Grasberg Mine",
+            "location": "Papua, Indonesia", 
+            "description": "High-altitude mining operation in mountainous terrain",
+            "file_path": "data/DEM/Grasberg_Mine_Indonesia.tif"
+        }
+    ]
+    return {"files": dem_files}
+
+@app.get("/api/dem/analyze/{dem_id}")
+async def analyze_dem(dem_id: str):
+    """Analyze DEM file and return color-coded visualization with statistics"""
+    try:
+        # Map DEM IDs to file paths
+        dem_files = {
+            "bingham_canyon": "data/DEM/Bingham_Canyon_Mine.tif",
+            "chuquicamata": "data/DEM/Chuquicamata_copper_Mine.tif", 
+            "grasberg": "data/DEM/Grasberg_Mine_Indonesia.tif"
+        }
+        
+        if dem_id not in dem_files:
+            raise HTTPException(status_code=400, detail="Invalid DEM file ID")
+        
+        file_path = project_root / dem_files[dem_id]
+        
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="DEM file not found")
+        
+        # Process DEM file and generate color-coded visualization
+        result = await process_dem_file(file_path, dem_id)
+        
+        return {
+            "dem_id": dem_id,
+            "image_url": result["image_url"],
+            "statistics": result["statistics"],
+            "processing_time": result["processing_time"],
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"DEM analysis failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"DEM analysis failed: {str(e)}")
+
+async def process_dem_file(file_path: Path, dem_id: str):
+    """Process DEM .tif file and generate color-coded PNG visualization"""
+    try:
+        import rasterio
+        import matplotlib.pyplot as plt
+        import matplotlib.colors as colors
+        from matplotlib.colors import LinearSegmentedColormap
+        import numpy as np
+        from PIL import Image
+        import io
+        import base64
+        
+        start_time = datetime.now()
+        
+        # Read DEM data
+        with rasterio.open(file_path) as dataset:
+            elevation_data = dataset.read(1)
+            # Handle nodata values
+            if dataset.nodata is not None:
+                elevation_data = np.ma.masked_where(elevation_data == dataset.nodata, elevation_data)
+            else:
+                # If no nodata value specified, mask extreme values
+                elevation_data = np.ma.masked_where(
+                    (elevation_data < -1000) | (elevation_data > 10000), 
+                    elevation_data
+                )
+        
+        # Calculate statistics
+        valid_data = elevation_data.compressed()  # Remove masked values
+        if len(valid_data) == 0:
+            raise ValueError("No valid elevation data found in DEM file")
+            
+        stats = {
+            "min_elevation": round(float(np.min(valid_data)), 1),
+            "max_elevation": round(float(np.max(valid_data)), 1),
+            "mean_elevation": round(float(np.mean(valid_data)), 1),
+            "std_elevation": round(float(np.std(valid_data)), 1),
+            "elevation_range": round(float(np.max(valid_data) - np.min(valid_data)), 1)
+        }
+        
+        # Add terrain classification
+        elevation_range = stats["elevation_range"]
+        if elevation_range > 1000:
+            stats["terrain_type"] = "Mountainous"
+            stats["risk_level"] = "High"
+        elif elevation_range > 500:
+            stats["terrain_type"] = "Hilly"
+            stats["risk_level"] = "Moderate to High"
+        elif elevation_range > 100:
+            stats["terrain_type"] = "Rolling"
+            stats["risk_level"] = "Moderate"
+        else:
+            stats["terrain_type"] = "Flat"
+            stats["risk_level"] = "Low"
+        
+        # Create custom colormap: Green (low) → Yellow → Brown → White (high)
+        colors_list = [
+            '#2D5016',  # Dark Green (lowest)
+            '#4F7942',  # Green
+            '#8FBC8F',  # Light Green  
+            '#DAA520',  # Gold/Yellow
+            '#CD853F',  # Peru/Brown
+            '#A0522D',  # Sienna/Dark Brown
+            '#FFFFFF'   # White (highest)
+        ]
+        
+        n_bins = 256
+        terrain_cmap = LinearSegmentedColormap.from_list(
+            'terrain', colors_list, N=n_bins
+        )
+        
+        # Create the plot with proper DPI and size
+        plt.style.use('dark_background')
+        fig, ax = plt.subplots(figsize=(10, 8), dpi=100)
+        
+        # Plot elevation data with custom colormap
+        im = ax.imshow(
+            elevation_data, 
+            cmap=terrain_cmap,
+            interpolation='bilinear',
+            aspect='equal'
+        )
+        
+        # Add colorbar
+        cbar = plt.colorbar(im, ax=ax, shrink=0.8, aspect=20, pad=0.02)
+        cbar.set_label('Elevation (meters)', color='white', fontsize=12, fontweight='bold')
+        cbar.ax.tick_params(colors='white', labelsize=10)
+        
+        # Styling
+        title = dem_id.replace("_", " ").title()
+        ax.set_title(f'{title} - Digital Elevation Model', 
+                    color='white', fontsize=16, fontweight='bold', pad=20)
+        ax.axis('off')  # Remove axes for cleaner look
+        
+        # Add text box with statistics
+        textstr = f'''Elevation Statistics:
+Min: {stats["min_elevation"]} m
+Max: {stats["max_elevation"]} m  
+Mean: {stats["mean_elevation"]} m
+Range: {stats["elevation_range"]} m
+Terrain: {stats["terrain_type"]}'''
+        
+        props = dict(boxstyle='round,pad=0.5', facecolor='black', alpha=0.8, edgecolor='white')
+        ax.text(0.02, 0.98, textstr, transform=ax.transAxes, fontsize=10,
+                verticalalignment='top', color='white', bbox=props, fontweight='bold')
+        
+        plt.tight_layout()
+        
+        # Save to bytes buffer
+        img_buffer = io.BytesIO()
+        plt.savefig(img_buffer, format='png', facecolor='#0f172a', 
+                   bbox_inches='tight', dpi=100, edgecolor='none')
+        img_buffer.seek(0)
+        plt.close()
+        
+        # Convert to base64 for web display
+        img_base64 = base64.b64encode(img_buffer.getvalue()).decode()
+        image_url = f"data:image/png;base64,{img_base64}"
+        
+        # Also save as file for download (optional)
+        try:
+            output_dir = project_root / "outputs" / "dem_visualizations"
+            output_dir.mkdir(parents=True, exist_ok=True)
+            
+            output_file = output_dir / f"{dem_id}_elevation_map.png"
+            with open(output_file, 'wb') as f:
+                f.write(img_buffer.getvalue())
+            logger.info(f"DEM visualization saved to {output_file}")
+        except Exception as save_error:
+            logger.warning(f"Could not save DEM file to disk: {save_error}")
+        
+        processing_time = (datetime.now() - start_time).total_seconds()
+        
+        return {
+            "image_url": image_url,
+            "statistics": stats,
+            "processing_time": f"{processing_time:.2f}s"
+        }
+        
+    except ImportError as e:
+        missing_lib = str(e).split("'")[1] if "'" in str(e) else "required library"
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Missing required library: {missing_lib}. Please install: pip install rasterio matplotlib"
+        )
+    except Exception as e:
+        logger.error(f"DEM processing error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"DEM processing failed: {str(e)}")
+
 @app.get("/api/simulate-data")
 async def simulate_environmental_data():
     """Generate sample environmental data for testing"""
