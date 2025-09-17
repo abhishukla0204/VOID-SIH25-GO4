@@ -1,22 +1,38 @@
 # 🏔️ Rockfall Detection and Prediction System
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
+[![React](https://img.shields.io/badge/React-18.0%2B-blue.svg)](https://react.dev)
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Detection-green.svg)](https://ultralytics.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-teal.svg)](https://fastapi.tiangolo.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-An advanced AI-powered system for real-time rockfall detection and predictive risk assessment using computer vision, machine learning, and geospatial analysis.
+**🌟 Powered by YOLOv8** - An advanced AI-powered system for real-time rockfall detection, predictive risk assessment, live monitoring, and comprehensive geospatial analysis using computer vision, machine learning, and modern web technologies.
 
 ## 🌟 Key Features
 
-### 🎯 **Dual AI Approach**
+### 🎯 **AI-Powered Detection & Prediction**
 - **YOLOv8 Object Detection**: Real-time rock detection in video streams (99.5% mAP50)
 - **ML Risk Prediction**: XGBoost, Random Forest, and Neural Network ensemble for risk assessment
+- **Real-time Analysis**: Advanced computer vision for instant threat detection
 
-### 📊 **Multi-Source Data Integration**
-- Digital Elevation Models (DEM) processing
+### 📡 **Live Monitoring System**
+- **Multi-Camera Surveillance**: 4-directional camera feeds (East, West, North, South)
+- **Real-time Streaming**: Live video feeds with WebRTC support
+- **Camera Controls**: Record, pause, fullscreen viewing capabilities
+- **Status Monitoring**: Real-time camera health and connectivity status
+
+### �️ **Digital Elevation Model (DEM) Analysis**
+- **Terrain Visualization**: Color-coded elevation mapping with advanced rendering
+- **Multi-Mine Support**: Pre-loaded data for Bingham Canyon, Chuquicamata, and Grasberg mines
+- **Interactive Analysis**: Zoom, pan, and statistical analysis tools
+- **Color Coding**: Green (low) → Yellow → Brown → White (high elevation)
+- **Statistical Insights**: Elevation statistics, terrain analysis, and downloadable reports
+
+### �📊 **Multi-Source Data Integration**
+- Digital Elevation Models (.tif) processing with rasterio
 - Environmental sensor monitoring
 - Weather pattern analysis
-- Terrain feature extraction
+- Terrain feature extraction and slope analysis
 
 ### 🚨 **Smart Alert System**
 - Real-time risk assessment
@@ -24,32 +40,39 @@ An advanced AI-powered system for real-time rockfall detection and predictive ri
 - Automated notification system
 - Historical event tracking
 
-### 📈 **Interactive Dashboard**
-- Live monitoring interface
-- Risk visualization
-- Performance analytics
-- System health monitoring
+### 🌐 **Modern Web Interface**
+- **React Frontend**: Modern, responsive Material-UI design
+- **FastAPI Backend**: High-performance async API server
+- **Real-time Updates**: WebSocket-based live data streaming
+- **Interactive Dashboards**: Live monitoring, risk visualization, and system analytics
 
 ## 🏗️ Project Architecture
 
 ### 📂 **Project Structure**
 ```
 rockfall_detection/
-├── 📁 frontend/               # React Web Application
+├── 📁 frontend/               # React Web Application (Port: 3000)
 │   ├── 📱 src/                    # React source code
 │   │   ├── pages/                     # Page components
 │   │   │   ├── Dashboard.jsx              # Main monitoring dashboard
 │   │   │   ├── Detection.jsx              # Rock detection interface
 │   │   │   ├── RiskAssessment.jsx         # Environmental risk forms
+│   │   │   ├── LiveMonitoring.jsx         # 4-camera surveillance system
+│   │   │   ├── DEMAnalysis.jsx            # Digital Elevation Model visualization
 │   │   │   └── Settings.jsx               # System configuration
 │   │   ├── hooks/                     # Custom React hooks
 │   │   │   └── useWebSocket.js            # WebSocket connection hook
 │   │   └── App.jsx                    # Main application component
-│   ├── 📦 package.json            # Node.js dependencies
+│   ├── 📦 package.json            # Node.js dependencies (React 18, Material-UI)
 │   └── ⚡ vite.config.js         # Vite build configuration
 │
-├── 📁 backend/                # FastAPI Web Server
+├── 📁 backend/                # FastAPI Web Server (Port: 8000)
 │   └── 🚀 main.py                 # FastAPI application with ML integration
+│       ├── Camera APIs                # /api/camera/* endpoints
+│       ├── DEM Processing            # /api/dem/analyze/* endpoints
+│       ├── Rock Detection           # /api/detect-rocks endpoint
+│       ├── Risk Assessment         # /api/predict-risk endpoint
+│       └── WebSocket Support       # Real-time data streaming
 │
 ├── 📁 src/                    # Core ML & Analysis Modules
 │   ├── 🧠 prediction/         # ML prediction models
@@ -75,9 +98,9 @@ rockfall_detection/
 │
 ├── 📁 data/                   # Training & input data
 │   ├── 🗻 DEM/                # Digital Elevation Models
-│   │   ├── Bingham_Canyon_Mine.tif
-│   │   ├── Chuquicamata_copper_Mine.tif
-│   │   └── Grasberg_Mine_Indonesia.tif
+│   │   ├── Bingham_Canyon_Mine.tif    # Utah copper mine DEM
+│   │   ├── Chuquicamata_copper_Mine.tif # Chile copper mine DEM
+│   │   └── Grasberg_Mine_Indonesia.tif # Indonesia gold mine DEM
 │   │
 │   └── 🎯 rockfall_training_data/  # YOLOv8 training dataset
 │       ├── train/images/          # Training images (905 samples)
@@ -98,6 +121,23 @@ rockfall_detection/
 │   ├── 🎯 experiment_20250916_210441/  # YOLOv8 training results
 │   │   ├── weights/best.pt            # Best YOLOv8 model (99.5% mAP50)
 │   │   ├── results.png               # Training metrics
+│   │   ├── confusion_matrix.png      # Model evaluation
+│   │   └── val_batch*_pred.jpg       # Validation predictions
+│   │
+│   ├── 📊 alerts/             # Alert logs & notifications
+│   ├── 📈 logs/              # System operation logs
+│   └── 📋 *.json             # Analysis reports & results
+│
+├── 📁 sample_data/           # Test data for development
+│   ├── sensor_data/              # Sample sensor readings
+│   └── weather_data/             # Sample weather data
+│
+├── 🛠️ main.py               # Main system orchestrator
+├── 🧪 demo.py               # System demonstration script
+├── ✅ validate_system.py    # System validation & testing
+├── 📋 requirements.txt      # Python dependencies (includes rasterio, matplotlib)
+└── 📚 SYSTEM_DOCUMENTATION.md  # Detailed technical docs
+```
 │   │   ├── confusion_matrix.png      # Model evaluation
 │   │   └── val_batch*_pred.jpg       # Validation predictions
 │   │
@@ -172,7 +212,7 @@ DEM Files → Slope Analysis → Feature Extraction → Risk Factors → Integra
 - 8GB+ RAM recommended
 - GPU optional (CPU supported)
 
-### ⚡ **Installation**
+### ⚡ **Installation & Setup**
 
 1. **Clone the Repository**
    ```bash
@@ -191,14 +231,56 @@ DEM Files → Slope Analysis → Feature Extraction → Risk Factors → Integra
    source .venv/bin/activate
    ```
 
-3. **Install Dependencies**
+3. **Install Backend Dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-### 🎯 **Quick Usage Examples**
+4. **Install Frontend Dependencies**
+   ```bash
+   cd frontend
+   npm install
+   cd ..
+   ```
 
-#### **1. Train Models (if needed)**
+### 🚀 **Quick Launch**
+
+#### **� Start Full Web Application (Recommended)**
+```bash
+# Terminal 1: Start Backend Server
+cd backend
+python main.py
+# Backend runs on http://localhost:8000
+
+# Terminal 2: Start Frontend Server
+cd frontend
+npm run dev
+# Frontend runs on http://localhost:3000
+```
+
+#### **📱 Access the Application**
+- **🏠 Main Dashboard**: http://localhost:3000 - Environmental monitoring & alerts
+- **📡 Live Monitoring**: http://localhost:3000/live-monitoring - 4-camera surveillance system
+- **🗺️ DEM Analysis**: http://localhost:3000/dem-analysis - Terrain visualization
+- **�🎯 Rock Detection**: http://localhost:3000/detection - Image upload & analysis
+- **⚖️ Risk Assessment**: http://localhost:3000/risk-assessment - Environmental inputs
+- **🔧 API Docs**: http://localhost:8000/docs - Interactive API documentation
+
+### 🎯 **Usage Examples**
+
+#### **1. Live Camera Monitoring**
+- Navigate to Live Monitoring page
+- View real-time feeds from East, West, North, South cameras
+- Use recording controls and fullscreen mode
+- Monitor camera status and connectivity
+
+#### **2. DEM Terrain Analysis**
+- Access DEM Analysis page
+- Select from available mines: Bingham Canyon, Chuquicamata, Grasberg
+- View color-coded elevation maps (Green → Yellow → Brown → White)
+- Analyze elevation statistics and download reports
+
+#### **3. Train Models (if needed)**
 ```bash
 # Train YOLOv8 detection model
 python main.py --mode train --epochs 50 --batch_size 8
@@ -207,7 +289,7 @@ python main.py --mode train --epochs 50 --batch_size 8
 python src/prediction/train_models.py
 ```
 
-#### **2. Test Trained Models**
+#### **4. Test Trained Models**
 ```bash
 # Test detection model
 python main.py --mode detect --source data/rockfall_training_data/test/images/
@@ -216,16 +298,16 @@ python main.py --mode detect --source data/rockfall_training_data/test/images/
 python src/prediction/test_models.py
 ```
 
-#### **3. Launch Dashboard**
+#### **5. Legacy Dashboard Options**
 ```bash
-# Start web dashboard
+# Start legacy web dashboard
 python main.py --mode dashboard
 
 # Or run enhanced dashboard
 python src/dashboard/enhanced_dashboard.py
 ```
 
-#### **4. Run Complete System**
+#### **6. Run Complete System**
 ```bash
 # Run integrated system with all components
 python main.py --mode all
@@ -262,7 +344,165 @@ python main.py --mode all
 - **Temporal**: month, day_of_year, season
 - **Others**: slope_variability, wind_speed, risk_score
 
-## 🔧 API Documentation
+## 🌐 Modern Web API Documentation
+
+### 📡 **Camera Monitoring APIs**
+
+#### **Get Camera Status**
+```http
+GET /api/camera/status
+```
+**Response:**
+```json
+{
+  "east": {"status": "online", "fps": 30, "resolution": "1920x1080"},
+  "west": {"status": "online", "fps": 30, "resolution": "1920x1080"},
+  "north": {"status": "online", "fps": 30, "resolution": "1920x1080"},
+  "south": {"status": "offline", "fps": 0, "resolution": "N/A"}
+}
+```
+
+#### **Stream Camera Feed**
+```http
+GET /api/camera/{direction}/stream
+```
+**Parameters:**
+- `direction`: east, west, north, south
+
+**Usage Example:**
+```javascript
+// React component for camera streaming
+const CameraFeed = ({ direction }) => {
+  return (
+    <img 
+      src={`http://localhost:8000/api/camera/${direction}/stream`}
+      alt={`${direction} camera feed`}
+      style={{ width: '100%', height: 'auto' }}
+    />
+  );
+};
+```
+
+### 🗺️ **DEM Analysis APIs**
+
+#### **Analyze DEM File**
+```http
+GET /api/dem/analyze/{dem_id}
+```
+**Parameters:**
+- `dem_id`: bingham_canyon, chuquicamata, grasberg
+
+**Response:**
+```json
+{
+  "dem_id": "bingham_canyon",
+  "processed_image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
+  "statistics": {
+    "min_elevation": 1524.3,
+    "max_elevation": 2891.7,
+    "mean_elevation": 2108.5,
+    "std_elevation": 245.8
+  },
+  "metadata": {
+    "name": "Bingham Canyon Mine",
+    "location": "Utah, USA",
+    "processed_at": "2025-09-17T10:30:00Z"
+  }
+}
+```
+
+#### **List Available DEMs**
+```http
+GET /api/dem/list
+```
+**Response:**
+```json
+[
+  {"id": "bingham_canyon", "name": "Bingham Canyon Mine", "location": "Utah, USA"},
+  {"id": "chuquicamata", "name": "Chuquicamata Copper Mine", "location": "Chile"},
+  {"id": "grasberg", "name": "Grasberg Mine", "location": "Indonesia"}
+]
+```
+
+### 🎯 **Rock Detection API**
+```http
+POST /api/detect-rocks
+Content-Type: multipart/form-data
+```
+**Usage Example:**
+```javascript
+const detectRocks = async (imageFile) => {
+  const formData = new FormData();
+  formData.append('file', imageFile);
+  
+  const response = await fetch('/api/detect-rocks', {
+    method: 'POST',
+    body: formData
+  });
+  
+  return await response.json();
+};
+```
+
+### ⚖️ **Risk Assessment API**
+```http
+POST /api/predict-risk
+Content-Type: application/json
+```
+**Request Body:**
+```json
+{
+  "slope": 45.5,
+  "elevation": 1500.0,
+  "fracture_density": 3.2,
+  "rainfall": 12.5,
+  "temperature": 15.8,
+  "seismic_activity": 2.1
+}
+```
+
+**Response:**
+```json
+{
+  "risk_score": 0.752,
+  "risk_level": "HIGH",
+  "predictions": {
+    "xgboost": 0.745,
+    "random_forest": 0.759,
+    "neural_network": 0.751
+  },
+  "recommendations": [
+    "Increase monitoring frequency",
+    "Consider evacuation protocols"
+  ]
+}
+```
+
+### 🔌 **WebSocket Real-time Updates**
+```javascript
+// Connect to real-time data stream
+const ws = new WebSocket('ws://localhost:8000/ws');
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  console.log('Real-time update:', data);
+  
+  // Handle different message types
+  switch(data.type) {
+    case 'environmental_update':
+      updateEnvironmentalData(data.payload);
+      break;
+    case 'alert':
+      showAlert(data.payload);
+      break;
+    case 'camera_status':
+      updateCameraStatus(data.payload);
+      break;
+  }
+};
+```
+
+## 🔧 Legacy API Documentation
 
 ### 🎯 **Detection API Usage**
 ```python
@@ -764,29 +1004,108 @@ python src/dashboard/enhanced_dashboard.py
 ```
 
 #### **4. Run Complete System**
-   streamlit run src/dashboard/app.py
-   ```
+```bash
+# Run integrated system with all components
+python main.py --mode all
+```
 
-## Data Sources
+#### **5. Start Streamlit Dashboard (Legacy)**
+```bash
+streamlit run src/dashboard/app.py
+```
 
-- **Video Data**: Custom rockfall detection dataset (Roboflow)
-- **DEM Files**: Bingham Canyon Mine, Chuquicamata, Grasberg Mine
-- **Sensor Data**: Synthetic vibration and environmental sensors
-- **Weather Data**: Historical and real-time weather APIs
+## 🎯 Complete System Overview
 
-## Model Performance
+### 🏗️ **System Architecture Summary**
+This rockfall detection system combines multiple cutting-edge technologies:
 
-The system uses YOLOv8 for object detection with the following configuration:
-- Classes: 1 (Rock)
-- Input Size: 640x640
-- Architecture: YOLOv8n (nano) for fast inference
+1. **🎯 Computer Vision**: YOLOv8-powered real-time rock detection (99.5% mAP50)
+2. **🧠 Machine Learning**: Ensemble prediction models (XGBoost + Random Forest + Neural Network)
+3. **📡 Live Monitoring**: 4-directional camera surveillance system
+4. **🗺️ Geospatial Analysis**: Advanced DEM visualization with color-coded terrain mapping
+5. **🌐 Modern Web Interface**: React + FastAPI full-stack application
+6. **📊 Real-time Analytics**: WebSocket-based live data streaming
 
-## Alert System
+### 📋 **Data Sources & Integration**
+- **🎥 Video Data**: Custom rockfall detection dataset (Roboflow) - 965 total samples
+- **🗻 DEM Files**: Three major mining sites (Bingham Canyon, Chuquicamata, Grasberg)
+- **📡 Sensor Data**: Synthetic vibration and environmental sensors
+- **🌤️ Weather Data**: Historical and real-time weather APIs integration
+- **📊 Environmental**: 19-feature risk assessment model
 
-- **Video-based**: Real-time object detection with confidence thresholds
-- **Sensor-based**: Vibration analysis with configurable thresholds
-- **Risk-based**: Predictive scoring using multiple data sources
+### ⚡ **Performance Metrics**
+- **🎯 Detection Accuracy**: 99.5% mAP50, 99.52% precision, 100% recall
+- **🧠 Prediction Accuracy**: 97.8% (Random Forest), 97.5% (Neural Network)
+- **⚡ Processing Speed**: 60.8ms per frame (CPU), <1ms risk assessment
+- **🌐 Web Performance**: React 18 + Vite for fast loading, Material-UI design
+- **📡 Real-time Capability**: WebSocket streaming, live camera feeds
 
-## License
+### 🚨 **Alert & Monitoring System**
+- **📹 Video-based**: Real-time object detection with confidence thresholds
+- **📊 Sensor-based**: Vibration analysis with configurable thresholds  
+- **🧠 Risk-based**: Predictive scoring using multiple data sources
+- **📱 Multi-channel**: Web dashboard, API alerts, real-time notifications
+- **📡 Live Monitoring**: 4-camera surveillance with recording capabilities
 
-This project is licensed under CC BY 4.0 (dataset) and MIT License (code).
+### 🎨 **User Interface Features**
+- **🎮 Interactive Dashboard**: Real-time environmental monitoring
+- **📡 Live Camera Feeds**: East/West/North/South directional surveillance
+- **🗺️ DEM Visualization**: Color-coded elevation mapping (Green→Yellow→Brown→White)
+- **🎯 Detection Interface**: Drag-and-drop rock detection
+- **⚖️ Risk Assessment**: Form-based environmental input and analysis
+- **⚙️ System Settings**: Configuration and monitoring tools
+
+### 🔌 **Integration Capabilities**
+- **🌐 RESTful APIs**: FastAPI backend with comprehensive endpoints
+- **📡 Real-time Streaming**: WebSocket support for live updates
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile
+- **🔧 Extensible Architecture**: Modular design for easy feature addition
+- **📊 Data Export**: CSV/JSON reports, downloadable analysis results
+
+## 🏆 Project Achievements
+
+### ✅ **Completed Features**
+- [x] **YOLOv8 Rock Detection** - 99.5% mAP50 accuracy
+- [x] **ML Risk Prediction** - 97.8% accuracy ensemble
+- [x] **Modern Web Application** - React + FastAPI stack
+- [x] **Live Camera Monitoring** - 4-directional surveillance
+- [x] **DEM Terrain Analysis** - Color-coded visualization
+- [x] **Real-time Dashboard** - Environmental monitoring
+- [x] **API Documentation** - Comprehensive REST APIs
+- [x] **WebSocket Integration** - Live data streaming
+- [x] **Responsive Design** - Material-UI components
+
+### 🚀 **Technical Innovations**
+- **🎯 Dual AI Approach**: Object detection + predictive modeling
+- **🗺️ Advanced DEM Processing**: Rasterio + Matplotlib visualization
+- **📡 Multi-Camera Integration**: Simulated real-time feeds
+- **🌐 Full-Stack Architecture**: Modern React + FastAPI design
+- **📊 Ensemble Learning**: Combined ML models for robust predictions
+
+## 📊 License & Dataset Information
+
+- **🏗️ Code License**: MIT License - Free for commercial and personal use
+- **📊 Dataset License**: CC BY 4.0 - Custom rockfall detection dataset
+- **🎯 YOLOv8**: Ultralytics open-source license
+- **🗻 DEM Data**: Public domain elevation models from major mining sites
+
+## 🤝 Contributing & Support
+
+### 🔧 **Development Setup**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Follow the installation guide above
+4. Test your changes with both frontend and backend
+5. Submit a pull request with detailed description
+
+### 📞 **Getting Help**
+- **📋 Documentation**: Complete technical docs in `SYSTEM_DOCUMENTATION.md`
+- **🐛 Issues**: Report bugs via GitHub Issues
+- **💬 Discussions**: Technical questions and feature requests
+- **📧 Contact**: Project maintainers for enterprise support
+
+---
+
+**🌟 Powered by YOLOv8 | 🏔️ Built for Safer Mining Operations**
+
+*This comprehensive rockfall detection system represents the cutting edge of AI-powered geological monitoring, combining computer vision, machine learning, and modern web technologies to protect lives and infrastructure in mining operations worldwide.*

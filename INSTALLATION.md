@@ -82,22 +82,22 @@ The frontend will be available at `http://localhost:5173`
                       │
 ┌─────────────────────────────────────────────┐
 │              Backend (FastAPI)              │
-│  ┌─────────────────────────────────────────┐ │
-│  │              API Endpoints              │ │
+│  ┌────────────────────────────────────────┐ │
+│  │              API Endpoints             │ │
 │  │  • /api/detect-rocks (Image analysis)  │ │
 │  │  • /api/predict-risk (Risk calculation)│ │
 │  │  • /api/status (System status)         │ │
 │  │  • /ws (WebSocket for real-time)       │ │
-│  └─────────────────────────────────────────┘ │
+│  └────────────────────────────────────────┘ │
 │                     │                       │
 │            ML Model Integration             │
 │                     │                       │
-│  ┌─────────────────────────────────────────┐ │
-│  │            ML Models                    │ │
-│  │  • YOLOv8 (Rock detection)            │ │
-│  │  • Risk Prediction Model              │ │
-│  │  • Image Preprocessing                │ │
-│  └─────────────────────────────────────────┘ │
+│  ┌────────────────────────────────────────┐ │
+│  │            ML Models                   │ │
+│  │  • YOLOv8 (Rock detection)             │ │
+│  │  • Risk Prediction Model               │ │
+│  │  • Image Preprocessing                 │ │
+│  └────────────────────────────────────────┘ │
 └─────────────────────────────────────────────┘
 ```
 
