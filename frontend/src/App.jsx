@@ -27,7 +27,8 @@ import {
   Menu as MenuIcon,
   Notifications as NotificationsIcon,
   Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon
+  CheckCircle as CheckCircleIcon,
+  Videocam as VideocamIcon
 } from '@mui/icons-material'
 import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast'
@@ -37,6 +38,7 @@ import Dashboard from './pages/Dashboard'
 import Detection from './pages/Detection'
 import RiskAssessment from './pages/RiskAssessment'
 import Settings from './pages/Settings'
+import LiveMonitoring from './pages/LiveMonitoring'
 
 // WebSocket hook for real-time updates
 import useWebSocket from './hooks/useWebSocket'
@@ -70,6 +72,12 @@ function App() {
       icon: <DashboardIcon />,
       path: 'dashboard',
       color: '#3b82f6'
+    },
+    {
+      text: 'Live Monitoring',
+      icon: <VideocamIcon />,
+      path: 'live-monitoring',
+      color: '#ef4444'
     },
     {
       text: 'Rock Detection',
@@ -268,6 +276,8 @@ function App() {
     switch (currentPage) {
       case 'dashboard':
         return <Dashboard {...pageProps} />
+      case 'live-monitoring':
+        return <LiveMonitoring {...pageProps} />
       case 'detection':
         return <Detection {...pageProps} />
       case 'risk-assessment':

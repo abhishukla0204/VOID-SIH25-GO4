@@ -724,6 +724,135 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
+# Camera streaming endpoints
+@app.get("/api/camera/status")
+async def get_camera_status():
+    """Get status of all cameras"""
+    return {
+        "cameras": {
+            "east": {
+                "id": "camera-east",
+                "name": "East Camera",
+                "status": "active",
+                "resolution": "1920x1080",
+                "fps": 30,
+                "last_detection": datetime.now().isoformat(),
+                "recording": False
+            },
+            "west": {
+                "id": "camera-west", 
+                "name": "West Camera",
+                "status": "active",
+                "resolution": "1920x1080",
+                "fps": 30,
+                "last_detection": datetime.now().isoformat(),
+                "recording": False
+            },
+            "north": {
+                "id": "camera-north",
+                "name": "North Camera", 
+                "status": "active",
+                "resolution": "1920x1080",
+                "fps": 30,
+                "last_detection": datetime.now().isoformat(),
+                "recording": True
+            },
+            "south": {
+                "id": "camera-south",
+                "name": "South Camera",
+                "status": "maintenance",
+                "resolution": "1920x1080", 
+                "fps": 0,
+                "last_detection": None,
+                "recording": False
+            }
+        },
+        "system": {
+            "total_cameras": 4,
+            "active_cameras": 3,
+            "recording_cameras": 1,
+            "storage_used": "45.2 GB",
+            "uptime": "12h 34m"
+        }
+    }
+
+@app.get("/api/camera/{direction}/stream")
+async def get_camera_stream(direction: str):
+    """Get camera stream URL for specified direction"""
+    valid_directions = ["east", "west", "north", "south"]
+    
+    if direction not in valid_directions:
+        raise HTTPException(status_code=400, detail="Invalid camera direction")
+    
+    # In a real implementation, this would return actual stream URLs
+    # For now, return placeholder data
+    return {
+        "direction": direction,
+        "stream_url": f"/api/camera/{direction}/feed",
+        "status": "active" if direction != "south" else "maintenance",
+        "resolution": "1920x1080",
+        "fps": 30 if direction != "south" else 0,
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.post("/api/camera/{direction}/control")
+async def control_camera(direction: str, action: str):
+    """Control camera operations (start/stop/record/etc.)"""
+    valid_directions = ["east", "west", "north", "south"]
+    valid_actions = ["start", "stop", "record", "stop_record", "zoom_in", "zoom_out", "rotate_left", "rotate_right"]
+    
+    if direction not in valid_directions:
+        raise HTTPException(status_code=400, detail="Invalid camera direction")
+    
+    if action not in valid_actions:
+        raise HTTPException(status_code=400, detail="Invalid camera action")
+    
+    # Simulate camera control response
+    return {
+        "direction": direction,
+        "action": action,
+        "status": "success",
+        "message": f"Camera {direction} {action} executed successfully",
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.get("/api/camera/{direction}/detections")
+async def get_camera_detections(direction: str):
+    """Get recent detections from specific camera"""
+    valid_directions = ["east", "west", "north", "south"]
+    
+    if direction not in valid_directions:
+        raise HTTPException(status_code=400, detail="Invalid camera direction")
+    
+    # Simulate detection data
+    detections = []
+    if direction == "north":
+        detections = [
+            {
+                "id": "det_001",
+                "timestamp": datetime.now().isoformat(),
+                "confidence": 0.95,
+                "bbox": {"x": 120, "y": 80, "width": 60, "height": 40},
+                "object_type": "rock",
+                "risk_level": "medium"
+            },
+            {
+                "id": "det_002", 
+                "timestamp": (datetime.now()).isoformat(),
+                "confidence": 0.87,
+                "bbox": {"x": 300, "y": 150, "width": 45, "height": 35},
+                "object_type": "rock",
+                "risk_level": "low"
+            }
+        ]
+    
+    return {
+        "direction": direction,
+        "detections": detections,
+        "total_count": len(detections),
+        "last_updated": datetime.now().isoformat()
+    }
+
 @app.get("/api/simulate-data")
 async def simulate_environmental_data():
     """Generate sample environmental data for testing"""
