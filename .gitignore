@@ -139,54 +139,71 @@ cython_debug/
 # Machine Learning & AI
 # ===========================
 
-# Model files (keep only essential trained models)
-*.pkl
-*.joblib
-*.h5
-*.hdf5
-*.onnx
-models/temp/
-models/experiments/
-models/checkpoints/
+# Include all model files and outputs
+!*.pkl
+!*.joblib
+!*.h5
+!*.hdf5
+!*.onnx
+!models/
+!models/**/*
 
-# Training outputs (keep only final results)
-outputs/experiment_*/
-!outputs/experiment_20250916_210441/weights/best.pt
+# Include all training outputs and experiments
+!outputs/
+!outputs/**/*
+!outputs/experiment_*/
+!outputs/experiment_*/**/*
 !outputs/models/
+!outputs/models/**/*
 
-# TensorBoard logs
-runs/
-logs/tensorboard/
+# TensorBoard logs (include these too)
+!runs/
+!runs/**/*
+!logs/tensorboard/
+!logs/tensorboard/**/*
 
-# Weights & Biases
-wandb/
+# Weights & Biases (include if present)
+!wandb/
+!wandb/**/*
 
-# MLflow
-mlruns/
+# MLflow (include if present)
+!mlruns/
+!mlruns/**/*
 
-# DVC (Data Version Control)
-.dvc
+# DVC (Data Version Control) - keep metadata
+!.dvc
+!.dvc/**/*
 
 # ===========================
 # Data Files
 # ===========================
 
-# Large datasets (avoid tracking large files)
-data/raw/
-data/processed/
-*.csv
-*.json
-*.parquet
-*.feather
-*.h5
-*.hdf5
+# Include all data directories and their contents
+!data/
+!data/**/*
+!sample_data/
+!sample_data/**/*
 
-# Keep essential data structure
+# Keep essential data structure and all contents
 !data/DEM/
-!data/rockfall_training_data/data.yaml
-!data/rockfall_training_data/README.*
+!data/DEM/**/*
+!data/camera_data/
+!data/camera_data/**/*
+!data/rockfall_training_data/
+!data/rockfall_training_data/**/*
 
-# Temporary data files
+# Include all data file formats
+!*.csv
+!*.json
+!*.parquet
+!*.feather
+!*.h5
+!*.hdf5
+!*.yaml
+!*.yml
+!*.txt
+
+# Temporary data files (still ignore these)
 temp_data/
 cache/
 *.tmp
@@ -304,24 +321,28 @@ outputs/alerts/*.log
 __pycache__/
 .pytest_cache/
 
-# Video files (usually too large)
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.webm
+# Video files - include project videos but exclude temporary ones
+!*.mp4
+!*.avi
+!*.mov
+!*.mkv
+!*.webm
+temp_videos/
+cache_videos/
 
-# Image files (except essential ones)
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.bmp
-*.tiff
-*.tif
-!data/rockfall_training_data/test/images/*.jpg
-!outputs/experiment_20250916_210441/results.png
-!outputs/experiment_20250916_210441/confusion_matrix.png
+# Image files - include project images
+!*.jpg
+!*.jpeg
+!*.png
+!*.gif
+!*.bmp
+!*.tiff
+!*.tif
+!data/rockfall_training_data/**/*.jpg
+!data/rockfall_training_data/**/*.png
+!data/camera_data/*.mp4
+!outputs/**/*.png
+!outputs/**/*.jpg
 
 # Backup files
 *.bak

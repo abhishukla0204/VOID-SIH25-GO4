@@ -20,7 +20,7 @@ Features:
 from fastapi import FastAPI, HTTPException, UploadFile, File, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 import uvicorn
@@ -36,6 +36,9 @@ import io
 from PIL import Image
 import tempfile
 from contextlib import asynccontextmanager
+import cv2
+import threading
+import time
 
 # Add project root to path for imports
 project_root = Path(__file__).parent.parent
@@ -227,6 +230,147 @@ class ConnectionManager:
                 self.active_connections.remove(connection)
 
 manager = ConnectionManager()
+
+# Video streaming manager for camera feeds
+class VideoStreamManager:
+    def __init__(self):
+        # Map video files to camera directions (paths relative to project root)
+        self.camera_videos = {
+            "east": "../data/camera_data/1.mp4",
+            "west": "../data/camera_data/2.mp4", 
+            "north": "../data/camera_data/3.mp4",
+            "south": None  # Maintenance
+        }
+        
+        # Video capture objects
+        self.video_captures = {}
+        self.video_info = {}
+        self.streaming_threads = {}
+        self.stream_active = {}
+        
+        # Initialize video captures
+        self._initialize_videos()
+    
+    def _initialize_videos(self):
+        """Initialize video capture objects and get metadata"""
+        for direction, video_path in self.camera_videos.items():
+            if video_path and os.path.exists(video_path):
+                cap = cv2.VideoCapture(video_path)
+                if cap.isOpened():
+                    fps = cap.get(cv2.CAP_PROP_FPS)
+                    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                    duration = frame_count / fps if fps > 0 else 0
+                    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                    
+                    self.video_info[direction] = {
+                        "fps": fps,
+                        "frame_count": frame_count,
+                        "duration": duration,
+                        "resolution": f"{width}x{height}",
+                        "status": "active"
+                    }
+                    self.video_captures[direction] = cap
+                    self.stream_active[direction] = False
+                    logger.info(f"Initialized camera {direction}: {duration:.1f}s, {fps:.1f}fps, {width}x{height}")
+                else:
+                    logger.error(f"Failed to open video for camera {direction}: {video_path}")
+            else:
+                self.video_info[direction] = {
+                    "fps": 0,
+                    "frame_count": 0,
+                    "duration": 0,
+                    "resolution": "N/A",
+                    "status": "maintenance" if direction == "south" else "offline"
+                }
+    
+    def get_camera_status(self):
+        """Get status of all cameras with real video metadata"""
+        status = {"cameras": {}, "system": {}}
+        
+        active_count = 0
+        recording_count = 0
+        
+        for direction in ["east", "west", "north", "south"]:
+            info = self.video_info.get(direction, {})
+            is_active = info.get("status") == "active"
+            is_recording = is_active and self.stream_active.get(direction, False)
+            
+            if is_active:
+                active_count += 1
+            if is_recording:
+                recording_count += 1
+                
+            status["cameras"][direction] = {
+                "id": f"camera-{direction}",
+                "name": f"{direction.title()} Camera",
+                "status": info.get("status", "offline"),
+                "resolution": info.get("resolution", "N/A"),
+                "fps": info.get("fps", 0),
+                "duration": info.get("duration", 0),
+                "last_detection": datetime.now().isoformat() if is_active else None,
+                "recording": is_recording,
+                "streaming": self.stream_active.get(direction, False)
+            }
+        
+        status["system"] = {
+            "total_cameras": 4,
+            "active_cameras": active_count,
+            "recording_cameras": recording_count,
+            "storage_used": "45.2 GB",
+            "uptime": "12h 34m"
+        }
+        
+        return status
+    
+    def generate_frames(self, direction: str):
+        """Generate video frames for streaming with looping"""
+        if direction not in self.video_captures:
+            return
+            
+        cap = self.video_captures[direction]
+        self.stream_active[direction] = True
+        
+        try:
+            while self.stream_active[direction]:
+                ret, frame = cap.read()
+                
+                if not ret:
+                    # End of video reached, restart from beginning
+                    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                    continue
+                
+                # Encode frame as JPEG
+                ret, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+                if ret:
+                    frame_bytes = buffer.tobytes()
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                
+                # Control frame rate (simulate real-time playback)
+                time.sleep(1.0 / self.video_info[direction]["fps"])
+                
+        except Exception as e:
+            logger.error(f"Error in video stream for {direction}: {e}")
+        finally:
+            self.stream_active[direction] = False
+    
+    def start_stream(self, direction: str):
+        """Start streaming for a specific camera"""
+        if direction in self.video_captures and not self.stream_active.get(direction, False):
+            self.stream_active[direction] = True
+            return True
+        return False
+    
+    def stop_stream(self, direction: str):
+        """Stop streaming for a specific camera"""
+        if direction in self.stream_active:
+            self.stream_active[direction] = False
+            return True
+        return False
+
+# Initialize video stream manager
+video_manager = VideoStreamManager()
 
 # Pydantic models for request/response
 class EnvironmentalData(BaseModel):
@@ -727,54 +871,8 @@ async def websocket_endpoint(websocket: WebSocket):
 # Camera streaming endpoints
 @app.get("/api/camera/status")
 async def get_camera_status():
-    """Get status of all cameras"""
-    return {
-        "cameras": {
-            "east": {
-                "id": "camera-east",
-                "name": "East Camera",
-                "status": "active",
-                "resolution": "1920x1080",
-                "fps": 30,
-                "last_detection": datetime.now().isoformat(),
-                "recording": False
-            },
-            "west": {
-                "id": "camera-west", 
-                "name": "West Camera",
-                "status": "active",
-                "resolution": "1920x1080",
-                "fps": 30,
-                "last_detection": datetime.now().isoformat(),
-                "recording": False
-            },
-            "north": {
-                "id": "camera-north",
-                "name": "North Camera", 
-                "status": "active",
-                "resolution": "1920x1080",
-                "fps": 30,
-                "last_detection": datetime.now().isoformat(),
-                "recording": True
-            },
-            "south": {
-                "id": "camera-south",
-                "name": "South Camera",
-                "status": "maintenance",
-                "resolution": "1920x1080", 
-                "fps": 0,
-                "last_detection": None,
-                "recording": False
-            }
-        },
-        "system": {
-            "total_cameras": 4,
-            "active_cameras": 3,
-            "recording_cameras": 1,
-            "storage_used": "45.2 GB",
-            "uptime": "12h 34m"
-        }
-    }
+    """Get status of all cameras with real video metadata"""
+    return video_manager.get_camera_status()
 
 @app.get("/api/camera/{direction}/stream")
 async def get_camera_stream(direction: str):
@@ -784,16 +882,37 @@ async def get_camera_stream(direction: str):
     if direction not in valid_directions:
         raise HTTPException(status_code=400, detail="Invalid camera direction")
     
-    # In a real implementation, this would return actual stream URLs
-    # For now, return placeholder data
+    status = video_manager.get_camera_status()
+    camera_info = status["cameras"][direction]
+    
     return {
         "direction": direction,
         "stream_url": f"/api/camera/{direction}/feed",
-        "status": "active" if direction != "south" else "maintenance",
-        "resolution": "1920x1080",
-        "fps": 30 if direction != "south" else 0,
+        "status": camera_info["status"],
+        "resolution": camera_info["resolution"],
+        "fps": camera_info["fps"],
+        "duration": camera_info["duration"],
         "timestamp": datetime.now().isoformat()
     }
+
+@app.get("/api/camera/{direction}/feed")
+async def get_camera_feed(direction: str):
+    """Get live video feed for specified camera direction"""
+    valid_directions = ["east", "west", "north", "south"]
+    
+    if direction not in valid_directions:
+        raise HTTPException(status_code=400, detail="Invalid camera direction")
+    
+    if direction not in video_manager.video_captures:
+        raise HTTPException(status_code=404, detail=f"Camera {direction} not available")
+    
+    # Start streaming for this direction
+    video_manager.start_stream(direction)
+    
+    return StreamingResponse(
+        video_manager.generate_frames(direction),
+        media_type="multipart/x-mixed-replace; boundary=frame"
+    )
 
 @app.post("/api/camera/{direction}/control")
 async def control_camera(direction: str, action: str):
@@ -807,12 +926,30 @@ async def control_camera(direction: str, action: str):
     if action not in valid_actions:
         raise HTTPException(status_code=400, detail="Invalid camera action")
     
-    # Simulate camera control response
+    # Handle real camera control
+    success = False
+    message = ""
+    
+    if action == "start":
+        success = video_manager.start_stream(direction)
+        message = "Stream started" if success else "Failed to start stream"
+    elif action == "stop":
+        success = video_manager.stop_stream(direction)
+        message = "Stream stopped" if success else "Failed to stop stream"
+    elif action in ["record", "stop_record"]:
+        # Simulate recording control
+        success = True
+        message = f"Recording {'started' if action == 'record' else 'stopped'}"
+    else:
+        # Simulate other camera controls
+        success = True
+        message = f"Camera {direction} {action} executed successfully"
+    
     return {
         "direction": direction,
         "action": action,
-        "status": "success",
-        "message": f"Camera {direction} {action} executed successfully",
+        "status": "success" if success else "error",
+        "message": message,
         "timestamp": datetime.now().isoformat()
     }
 
