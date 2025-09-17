@@ -110,10 +110,20 @@ const LiveMonitoring = () => {
           const updated = { ...prev }
           Object.keys(data.cameras).forEach(direction => {
             if (updated[direction]) {
+              const camera = data.cameras[direction]
               updated[direction] = {
                 ...updated[direction],
-                ...data.cameras[direction],
-                lastUpdate: new Date(data.cameras[direction].last_detection || new Date())
+                id: camera.id,
+                name: camera.name,
+                status: camera.status,
+                resolution: camera.resolution,
+                fps: camera.fps,
+                recording: camera.recording,
+                streaming: camera.streaming || false,
+                duration: camera.duration || 0,
+                detections: updated[direction].detections, // Keep existing detection count for UI
+                lastUpdate: new Date(camera.last_detection || new Date()),
+                url: `/api/camera/${direction}/feed`
               }
             }
           })
@@ -123,7 +133,10 @@ const LiveMonitoring = () => {
         // Update system stats
         setSystemStats(prev => ({
           ...prev,
-          ...data.system
+          totalCameras: data.system.total_cameras,
+          activeCameras: data.system.active_cameras,
+          storageUsed: data.system.storage_used,
+          uptime: data.system.uptime
         }))
       } catch (error) {
         console.error('Failed to fetch camera status:', error)
@@ -267,7 +280,31 @@ const LiveMonitoring = () => {
         >
           {camera.status === 'active' ? (
             <>
-              {/* Simulated video feed */}
+              {/* Real video feed */}
+              <img
+                src={`http://localhost:8000/api/camera/${direction}/feed`}
+                alt={`${direction} camera feed`}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+                onError={(e) => {
+                  // Fallback to simulated feed if video fails to load
+                  e.target.style.display = 'none'
+                  e.target.nextSibling.style.display = 'flex'
+                }}
+                onLoad={(e) => {
+                  // Hide fallback when video loads successfully
+                  e.target.style.display = 'block'
+                  if (e.target.nextSibling) {
+                    e.target.nextSibling.style.display = 'none'
+                  }
+                }}
+              />
+              
+              {/* Fallback simulated feed */}
               <Box
                 sx={{
                   width: '100%',
@@ -277,54 +314,79 @@ const LiveMonitoring = () => {
                       direction === 'west' ? '#7c2d12, #ea580c' :
                       direction === 'north' ? '#14532d, #22c55e' :
                       '#7c2d12, #dc2626'})`,
-                  display: 'flex',
+                  display: 'none',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  position: 'relative'
+                  position: 'absolute',
+                  top: 0,
+                  left: 0
                 }}
               >
                 <Typography variant="h6" sx={{ color: 'white', opacity: 0.8 }}>
                   🎥 Live Feed - {direction.toUpperCase()}
                 </Typography>
+              </Box>
                 
-                {/* Simulated detection overlays */}
-                {camera.detections > 0 && (
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 20,
-                      left: 20,
-                      border: '2px solid #f44336',
-                      borderRadius: 1,
-                      width: 80,
-                      height: 60,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <Typography variant="caption" sx={{ color: '#f44336', fontWeight: 600 }}>
-                      ROCK
-                    </Typography>
-                  </Box>
-                )}
-
-                {/* Timestamp overlay */}
+              {/* Detection overlays */}
+              {camera.detections > 0 && (
                 <Box
                   sx={{
                     position: 'absolute',
-                    bottom: 10,
+                    top: 20,
+                    left: 20,
+                    border: '2px solid #f44336',
+                    borderRadius: 1,
+                    width: 80,
+                    height: 60,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(244, 67, 54, 0.1)'
+                  }}
+                >
+                  <Typography variant="caption" sx={{ color: '#f44336', fontWeight: 600 }}>
+                    ROCK
+                  </Typography>
+                </Box>
+              )}
+
+              {/* Timestamp overlay */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 10,
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  padding: '4px 8px',
+                  borderRadius: 1
+                }}
+              >
+                <Typography variant="caption" sx={{ color: 'white' }}>
+                  {camera.lastUpdate.toLocaleTimeString()}
+                </Typography>
+              </Box>
+
+              {/* Recording indicator */}
+              {camera.recording && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 10,
                     right: 10,
-                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    backgroundColor: 'rgba(244, 67, 54, 0.9)',
                     padding: '4px 8px',
                     borderRadius: 1
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: 'white' }}>
-                    {camera.lastUpdate.toLocaleTimeString()}
+                  <RecordIcon sx={{ fontSize: 12, color: 'white' }} />
+                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
+                    REC
                   </Typography>
                 </Box>
-              </Box>
+              )}
             </>
           ) : (
             <Box
@@ -546,12 +608,56 @@ const LiveMonitoring = () => {
                       borderRadius: 2,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      position: 'relative',
+                      overflow: 'hidden'
                     }}
                   >
-                    <Typography variant="h4" sx={{ color: 'white' }}>
-                      🎥 {fullscreenCamera.toUpperCase()} CAMERA - FULLSCREEN
-                    </Typography>
+                    <img
+                      src={`http://localhost:8000/api/camera/${fullscreenCamera}/feed`}
+                      alt={`${fullscreenCamera} camera fullscreen feed`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        display: 'block'
+                      }}
+                      onError={(e) => {
+                        // Fallback to placeholder if video fails to load
+                        e.target.style.display = 'none'
+                        e.target.nextSibling.style.display = 'flex'
+                      }}
+                      onLoad={(e) => {
+                        // Hide fallback when video loads successfully
+                        e.target.style.display = 'block'
+                        if (e.target.nextSibling) {
+                          e.target.nextSibling.style.display = 'none'
+                        }
+                      }}
+                    />
+                    
+                    {/* Fallback content */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        display: 'none',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        gap: 2
+                      }}
+                    >
+                      <Typography variant="h4" sx={{ color: 'white' }}>
+                        🎥 {fullscreenCamera.toUpperCase()} CAMERA - FULLSCREEN
+                      </Typography>
+                      <Typography variant="body1" sx={{ color: '#64748b' }}>
+                        Loading video feed...
+                      </Typography>
+                    </Box>
                   </Box>
                 </CardContent>
               </Card>
