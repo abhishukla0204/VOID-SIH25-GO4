@@ -860,8 +860,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-- **Project Lead**: [Your Name]
-- **Email**: [your.email@domain.com]
+- **Project Lead**: [Abhinav Shukla]
+- **Email**: [shukla.abhinav0204@gmail.com]
 - **Documentation**: See `SYSTEM_DOCUMENTATION.md` for detailed technical docs
 - **Issues**: Please report bugs and feature requests via GitHub Issues
 
