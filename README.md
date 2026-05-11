@@ -1,4 +1,4 @@
-# 🏔️ Rockfall Detection and Prediction System
+# Rockfall Detection and Prediction System
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
 [![React](https://img.shields.io/badge/React-18.0%2B-blue.svg)](https://react.dev)
@@ -6,53 +6,52 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-teal.svg)](https://fastapi.tiangolo.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**🌟 Powered by YOLOv8** - An advanced AI-powered system for real-time rockfall detection, predictive risk assessment, live monitoring, and comprehensive geospatial analysis using computer vision, machine learning, and modern web technologies.
 
-## 🌟 Key Features
+## Key Features
 
-### 🎯 **AI-Powered Detection & Prediction**
+### **AI-Powered Detection & Prediction**
 - **YOLOv8 Object Detection**: Real-time rock detection in video streams (99.5% mAP50)
 - **ML Risk Prediction**: XGBoost, Random Forest, and Neural Network ensemble for risk assessment
 - **Real-time Analysis**: Advanced computer vision for instant threat detection
 
-### 📡 **Live Monitoring System**
+### **Live Monitoring System**
 - **Multi-Camera Surveillance**: 4-directional camera feeds (East, West, North, South)
 - **Real-time Streaming**: Live video feeds with WebRTC support
 - **Camera Controls**: Record, pause, fullscreen viewing capabilities
 - **Status Monitoring**: Real-time camera health and connectivity status
 
-### �️ **Digital Elevation Model (DEM) Analysis**
+### **Digital Elevation Model (DEM) Analysis**
 - **Terrain Visualization**: Color-coded elevation mapping with advanced rendering
 - **Multi-Mine Support**: Pre-loaded data for Bingham Canyon, Chuquicamata, and Grasberg mines
 - **Interactive Analysis**: Zoom, pan, and statistical analysis tools
 - **Color Coding**: Green (low) → Yellow → Brown → White (high elevation)
 - **Statistical Insights**: Elevation statistics, terrain analysis, and downloadable reports
 
-### �📊 **Multi-Source Data Integration**
+### **Multi-Source Data Integration**
 - Digital Elevation Models (.tif) processing with rasterio
 - Environmental sensor monitoring
 - Weather pattern analysis
 - Terrain feature extraction and slope analysis
 
-### 🚨 **Smart Alert System**
+### **Smart Alert System**
 - Real-time risk assessment
 - Multi-level alert thresholds
 - Automated notification system
 - Historical event tracking
 
-### 🌐 **Modern Web Interface**
+### **Modern Web Interface**
 - **React Frontend**: Modern, responsive Material-UI design
 - **FastAPI Backend**: High-performance async API server
 - **Real-time Updates**: WebSocket-based live data streaming
 - **Interactive Dashboards**: Live monitoring, risk visualization, and system analytics
 
-## 🏗️ Project Architecture
+## Project Architecture
 
-### 📂 **Project Structure**
+### **Project Structure**
 ```
 rockfall_detection/
-├── 📁 frontend/               # React Web Application (Port: 3000)
-│   ├── 📱 src/                    # React source code
+├── frontend/               # React Web Application (Port: 3000)
+│   ├── src/                    # React source code
 │   │   ├── pages/                     # Page components
 │   │   │   ├── Dashboard.jsx              # Main monitoring dashboard
 │   │   │   ├── Detection.jsx              # Rock detection interface
@@ -63,19 +62,19 @@ rockfall_detection/
 │   │   ├── hooks/                     # Custom React hooks
 │   │   │   └── useWebSocket.js            # WebSocket connection hook
 │   │   └── App.jsx                    # Main application component
-│   ├── 📦 package.json            # Node.js dependencies (React 18, Material-UI)
-│   └── ⚡ vite.config.js         # Vite build configuration
+│   ├── package.json            # Node.js dependencies (React 18, Material-UI)
+│   └── vite.config.js         # Vite build configuration
 │
-├── 📁 backend/                # FastAPI Web Server (Port: 8000)
-│   └── 🚀 main.py                 # FastAPI application with ML integration
+├── backend/                # FastAPI Web Server (Port: 8000)
+│   └── main.py                 # FastAPI application with ML integration
 │       ├── Camera APIs                # /api/camera/* endpoints
 │       ├── DEM Processing            # /api/dem/analyze/* endpoints
 │       ├── Rock Detection           # /api/detect-rocks endpoint
 │       ├── Risk Assessment         # /api/predict-risk endpoint
 │       └── WebSocket Support       # Real-time data streaming
 │
-├── 📁 src/                    # Core ML & Analysis Modules
-│   ├── 🧠 prediction/         # ML prediction models
+├── src/                    # Core ML & Analysis Modules
+│   ├── prediction/         # ML prediction models
 │   │   ├── ml_models.py           # XGBoost, RF, NN models
 │   │   ├── train_models.py        # Model training script
 │   │   ├── test_models.py         # Model testing & validation
@@ -83,26 +82,26 @@ rockfall_detection/
 │   │   ├── integrated_system.py   # Complete prediction pipeline
 │   │   └── risk_assessment.py     # Risk calculation logic
 │   │
-│   ├── 🎯 detection/          # Object detection (placeholder for future)
-│   ├── 🌍 dem_analysis/       # Digital Elevation Model processing
+│   ├── detection/          # Object detection (placeholder for future)
+│   ├── dem_analysis/       # Digital Elevation Model processing
 │   │   └── dem_processor.py       # DEM analysis & feature extraction
 │   │
-│   ├── 📡 sensors/            # Sensor data processing
+│   ├── sensors/            # Sensor data processing
 │   │   └── sensor_alerts.py       # Sensor monitoring & alerts
 │   │
-│   ├── 📊 dashboard/          # Legacy dashboard interface
+│   ├── dashboard/          # Legacy dashboard interface
 │   │   ├── app.py                 # Main dashboard application
 │   │   └── enhanced_dashboard.py  # Advanced dashboard features
 │   │
-│   └── 🏋️ training/          # Model training utilities
+│   └── training/          # Model training utilities
 │
-├── 📁 data/                   # Training & input data
-│   ├── 🗻 DEM/                # Digital Elevation Models
+├── data/                   # Training & input data
+│   ├── DEM/                # Digital Elevation Models
 │   │   ├── Bingham_Canyon_Mine.tif    # Utah copper mine DEM
 │   │   ├── Chuquicamata_copper_Mine.tif # Chile copper mine DEM
 │   │   └── Grasberg_Mine_Indonesia.tif # Indonesia gold mine DEM
 │   │
-│   └── 🎯 rockfall_training_data/  # YOLOv8 training dataset
+│   └── rockfall_training_data/  # YOLOv8 training dataset
 │       ├── train/images/          # Training images (905 samples)
 │       ├── train/labels/          # YOLO format annotations
 │       ├── valid/images/          # Validation images (48 samples)
@@ -110,33 +109,33 @@ rockfall_detection/
 │       ├── test/images/           # Test images (12 samples)
 │       └── test/labels/           # Test annotations
 │
-├── 📁 outputs/               # Generated outputs & models
-│   ├── 🧠 models/             # Trained ML models
+├── outputs/               # Generated outputs & models
+│   ├── models/             # Trained ML models
 │   │   ├── xgboost_model.joblib      # XGBoost classifier
 │   │   ├── random_forest_model.joblib # Random Forest classifier
 │   │   ├── neural_network_model.pth   # PyTorch neural network
 │   │   ├── main_scaler.joblib         # Feature scaler
 │   │   └── model_metadata.joblib      # Model metadata & performance
 │   │
-│   ├── 🎯 experiment_20250916_210441/  # YOLOv8 training results
+│   ├── experiment_20250916_210441/  # YOLOv8 training results
 │   │   ├── weights/best.pt            # Best YOLOv8 model (99.5% mAP50)
 │   │   ├── results.png               # Training metrics
 │   │   ├── confusion_matrix.png      # Model evaluation
 │   │   └── val_batch*_pred.jpg       # Validation predictions
 │   │
-│   ├── 📊 alerts/             # Alert logs & notifications
-│   ├── 📈 logs/              # System operation logs
-│   └── 📋 *.json             # Analysis reports & results
+│   ├── alerts/             # Alert logs & notifications
+│   ├── logs/              # System operation logs
+│   └── *.json             # Analysis reports & results
 │
-├── 📁 sample_data/           # Test data for development
+├── sample_data/           # Test data for development
 │   ├── sensor_data/              # Sample sensor readings
 │   └── weather_data/             # Sample weather data
 │
-├── 🛠️ main.py               # Main system orchestrator
-├── 🧪 demo.py               # System demonstration script
-├── ✅ validate_system.py    # System validation & testing
-├── 📋 requirements.txt      # Python dependencies (includes rasterio, matplotlib)
-└── 📚 SYSTEM_DOCUMENTATION.md  # Detailed technical docs
+├── main.py               # Main system orchestrator
+├── demo.py               # System demonstration script
+├── validate_system.py    # System validation & testing
+├── requirements.txt      # Python dependencies (includes rasterio, matplotlib)
+└── SYSTEM_DOCUMENTATION.md  # Detailed technical docs
 ```
 │   │   ├── confusion_matrix.png      # Model evaluation
 │   │   └── val_batch*_pred.jpg       # Validation predictions
@@ -156,9 +155,9 @@ rockfall_detection/
 └── 📚 SYSTEM_DOCUMENTATION.md  # Detailed technical docs
 ```
 
-## 🔄 Data Flow Architecture
+## Data Flow Architecture
 
-### 1️⃣ **Input Sources**
+### 1️**Input Sources**
 ```mermaid
 graph TD
     A[Video Stream] --> D[YOLOv8 Detection]
@@ -173,24 +172,24 @@ graph TD
     G --> I[Dashboard]
 ```
 
-### 2️⃣ **Processing Pipeline**
+### **Processing Pipeline**
 
-#### **🎯 Detection Pipeline**
+#### **Detection Pipeline**
 ```
 Video Input → YOLOv8 Model → Rock Detection → Risk Calculation → Alert Generation
 ```
 
-#### **🧠 Prediction Pipeline**
+#### **Prediction Pipeline**
 ```
 Environmental Data → Feature Extraction → ML Models → Risk Score → Dashboard Update
 ```
 
-#### **🌍 Terrain Analysis Pipeline**
+#### **Terrain Analysis Pipeline**
 ```
 DEM Files → Slope Analysis → Feature Extraction → Risk Factors → Integration
 ```
 
-### 3️⃣ **Model Architecture**
+### **Model Architecture**
 
 #### **YOLOv8 Detection Model**
 - **Input**: Video frames/images
@@ -205,14 +204,14 @@ DEM Files → Slope Analysis → Feature Extraction → Risk Factors → Integra
 - **Ensemble**: Combined prediction for robust results
 - **Format**: Joblib (.joblib) and PyTorch (.pth)
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
-### 📋 **Prerequisites**
+### **Prerequisites**
 - Python 3.8 or higher
 - 8GB+ RAM recommended
 - GPU optional (CPU supported)
 
-### ⚡ **Installation & Setup**
+### **Installation & Setup**
 
 1. **Clone the Repository**
    ```bash
@@ -243,7 +242,7 @@ DEM Files → Slope Analysis → Feature Extraction → Risk Factors → Integra
    cd ..
    ```
 
-### 🚀 **Quick Launch**
+### **Quick Launch**
 
 #### **� Start Full Web Application (Recommended)**
 ```bash
@@ -258,15 +257,15 @@ npm run dev
 # Frontend runs on http://localhost:3000
 ```
 
-#### **📱 Access the Application**
-- **🏠 Main Dashboard**: http://localhost:3000 - Environmental monitoring & alerts
-- **📡 Live Monitoring**: http://localhost:3000/live-monitoring - 4-camera surveillance system
-- **🗺️ DEM Analysis**: http://localhost:3000/dem-analysis - Terrain visualization
-- **�🎯 Rock Detection**: http://localhost:3000/detection - Image upload & analysis
-- **⚖️ Risk Assessment**: http://localhost:3000/risk-assessment - Environmental inputs
-- **🔧 API Docs**: http://localhost:8000/docs - Interactive API documentation
+#### **Access the Application**
+- **Main Dashboard**: http://localhost:3000 - Environmental monitoring & alerts
+- **Live Monitoring**: http://localhost:3000/live-monitoring - 4-camera surveillance system
+- **DEM Analysis**: http://localhost:3000/dem-analysis - Terrain visualization
+- **Rock Detection**: http://localhost:3000/detection - Image upload & analysis
+- **Risk Assessment**: http://localhost:3000/risk-assessment - Environmental inputs
+- **API Docs**: http://localhost:8000/docs - Interactive API documentation
 
-### 🎯 **Usage Examples**
+### **Usage Examples**
 
 #### **1. Live Camera Monitoring**
 - Navigate to Live Monitoring page
@@ -313,9 +312,9 @@ python src/dashboard/enhanced_dashboard.py
 python main.py --mode all
 ```
 
-## 🧠 Model Details
+## Model Details
 
-### 🎯 **YOLOv8 Detection Model**
+### **YOLOv8 Detection Model**
 - **Location**: `outputs/experiment_20250916_210441/weights/best.pt`
 - **Training Data**: 905 training images, 48 validation, 12 test
 - **Performance Metrics**:
@@ -325,7 +324,7 @@ python main.py --mode all
   - Inference Time: 60.8ms (CPU)
 - **Classes**: Single class "Rock" detection
 
-### 🧠 **Prediction Models**
+### **Prediction Models**
 - **Location**: `outputs/models/`
 - **Training Data**: 2,000 synthetic samples with 19 features
 - **Models Available**:
@@ -337,14 +336,14 @@ python main.py --mode all
   | Neural Network | `neural_network_model.pth` | 0.571 | 97.5% | Complex patterns |
   | Ensemble | Combined | 0.597 | 97.8% | Robust predictions |
 
-### 📊 **Input Features (19 total)**
+### **Input Features (19 total)**
 - **Terrain**: slope, elevation, fracture_density, roughness, instability_index
 - **Environmental**: rainfall, temperature, freeze_thaw_cycles, seismic_activity
 - **Risk Factors**: wetness_index, precipitation_intensity, humidity
 - **Temporal**: month, day_of_year, season
 - **Others**: slope_variability, wind_speed, risk_score
 
-## 🌐 Modern Web API Documentation
+## Modern Web API Documentation
 
 ### 📡 **Camera Monitoring APIs**
 
@@ -383,7 +382,7 @@ const CameraFeed = ({ direction }) => {
 };
 ```
 
-### 🗺️ **DEM Analysis APIs**
+### **DEM Analysis APIs**
 
 #### **Analyze DEM File**
 ```http
@@ -444,7 +443,7 @@ const detectRocks = async (imageFile) => {
 };
 ```
 
-### ⚖️ **Risk Assessment API**
+### **Risk Assessment API**
 ```http
 POST /api/predict-risk
 Content-Type: application/json
@@ -478,7 +477,7 @@ Content-Type: application/json
 }
 ```
 
-### 🔌 **WebSocket Real-time Updates**
+### **WebSocket Real-time Updates**
 ```javascript
 // Connect to real-time data stream
 const ws = new WebSocket('ws://localhost:8000/ws');
@@ -502,9 +501,9 @@ ws.onmessage = (event) => {
 };
 ```
 
-## 🔧 Legacy API Documentation
+## Legacy API Documentation
 
-### 🎯 **Detection API Usage**
+### **Detection API Usage**
 ```python
 from ultralytics import YOLO
 
@@ -522,7 +521,7 @@ for result in results:
         print(f"Rock detected with {confidence:.2f} confidence")
 ```
 
-### 🧠 **Prediction API Usage**
+### **Prediction API Usage**
 ```python
 import joblib
 import numpy as np
@@ -547,7 +546,7 @@ ensemble_risk = (xgb_risk + rf_risk) / 2
 print(f"Risk Score: {ensemble_risk[0]:.3f}")
 ```
 
-### 📊 **Risk Assessment Integration**
+### **Risk Assessment Integration**
 ```python
 from src.prediction.integrated_system import IntegratedRockfallSystem
 
@@ -570,9 +569,9 @@ if risk_score > 0.7:
     system.generate_alert("HIGH", f"Risk score: {risk_score:.3f}")
 ```
 
-## 🌐 Web Development Integration
+## Web Development Integration
 
-### 🖥️ **Dashboard Components**
+### **Dashboard Components**
 
 #### **Streamlit Dashboard** (`src/dashboard/app.py`)
 - Real-time monitoring interface
@@ -586,24 +585,24 @@ if risk_score > 0.7:
 - Interactive risk maps
 - Alert management
 
-## 🚀 **Full-Stack Web Application**
+## **Full-Stack Web Application**
 
-### 🏗️ **Modern React + FastAPI Architecture**
+### **Modern React + FastAPI Architecture**
 
 The system now includes a complete full-stack web application built with modern technologies:
 
-#### **🖥️ Frontend (React + Vite)**
+#### **Frontend (React + Vite)**
 - **Location**: `frontend/` directory
 - **Technology Stack**: React 18, Material-UI, Vite, Framer Motion
 - **Port**: http://localhost:3000
 - **Features**:
-  - 🎯 **Real-time Dashboard** with environmental monitoring
-  - 🌡️ **Environmental Data Cards**: Rainfall, Temperature, Fracture Density, Seismic Activity
-  - 📊 **Risk Visualization** with color-coded alerts
-  - 📷 **Rock Detection Interface** with image upload
-  - ⚙️ **Risk Assessment Tools** with form-based environmental inputs
-  - 📈 **Live Charts** for risk trends and system metrics
-  - 🔔 **Real-time Notifications** via WebSocket
+  - **Real-time Dashboard** with environmental monitoring
+  - **Environmental Data Cards**: Rainfall, Temperature, Fracture Density, Seismic Activity
+  - **Risk Visualization** with color-coded alerts
+  - **Rock Detection Interface** with image upload
+  - **Risk Assessment Tools** with form-based environmental inputs
+  - **Live Charts** for risk trends and system metrics
+  - **Real-time Notifications** via WebSocket
 
 #### **🔧 Backend (FastAPI)**
 - **Location**: `backend/` directory
@@ -615,16 +614,16 @@ The system now includes a complete full-stack web application built with modern 
   - `WebSocket /ws` - Real-time data streaming
   - `GET /api/health` - System health monitoring
 
-#### **🌍 Environmental Monitoring System**
+#### **Environmental Monitoring System**
 The dashboard now provides comprehensive environmental monitoring:
 
-- **🌧️ Rainfall Monitoring**: 24-hour precipitation tracking
-- **🌡️ Temperature Sensing**: Real-time ambient temperature
-- **🗻 Fracture Density**: Geological stability metrics
-- **📈 Seismic Activity**: Earthquake magnitude monitoring
-- **⚠️ Risk Assessment**: Dynamic risk calculation based on all environmental factors
+- **Rainfall Monitoring**: 24-hour precipitation tracking
+- **Temperature Sensing**: Real-time ambient temperature
+- **Fracture Density**: Geological stability metrics
+- **Seismic Activity**: Earthquake magnitude monitoring
+- **Risk Assessment**: Dynamic risk calculation based on all environmental factors
 
-#### **🔄 Real-time Data Flow**
+#### **Real-time Data Flow**
 ```mermaid
 graph LR
     A[Environmental Sensors] --> B[FastAPI Backend]
@@ -634,7 +633,7 @@ graph LR
     E --> F[Live Risk Display]
 ```
 
-### 🚀 **Quick Start for Web Development**
+### **Quick Start for Web Development**
 
 #### **Start Backend Server**
 ```bash
@@ -657,7 +656,7 @@ npm run dev
 - **Risk Assessment**: http://localhost:3000/risk-assessment - Environmental risk calculation
 - **API Documentation**: http://localhost:8000/docs - Interactive API docs
 
-### 🔌 **API Endpoints for Web Developers**
+### **API Endpoints for Web Developers**
 
 ```python
 # Example Flask integration
@@ -694,7 +693,7 @@ def detect_rocks():
     pass
 ```
 
-### 📱 **Frontend Integration Examples**
+### **Frontend Integration Examples**
 
 #### **React Component Example**
 ```javascript
@@ -726,23 +725,23 @@ const RiskMonitor = () => {
 };
 ```
 
-## 📊 System Performance
+## System Performance
 
-### ⚡ **Performance Metrics**
+### **Performance Metrics**
 - **Detection Speed**: 60.8ms per frame (CPU)
 - **Prediction Speed**: <1ms per sample
 - **Memory Usage**: ~2GB with all models loaded
 - **Accuracy**: 97.8% (ensemble prediction model)
 - **Reliability**: 99.5% detection mAP50
 
-### 📈 **Scalability**
+### **Scalability**
 - **Concurrent Users**: Dashboard supports 10+ simultaneous users
 - **Data Throughput**: Processes 1000+ sensor readings per minute
 - **Storage**: Efficient model storage with joblib compression
 
-## 🛠️ Development Guide
+## Development Guide
 
-### 🔧 **Adding New Features**
+### **Adding New Features**
 
 #### **1. Adding New ML Models**
 ```python
@@ -784,7 +783,7 @@ def new_dashboard_feature():
     # Your dashboard code here
 ```
 
-### 🧪 **Testing**
+### **Testing**
 ```bash
 # Run system validation
 python validate_system.py
@@ -794,14 +793,14 @@ python src/prediction/test_models.py
 python -m pytest tests/ (if test suite exists)
 ```
 
-### 📋 **Configuration**
+### **Configuration**
 - **Model Parameters**: Modify in respective training scripts
 - **Alert Thresholds**: Configure in `src/sensors/sensor_alerts.py`
 - **Dashboard Settings**: Customize in `src/dashboard/app.py`
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
-### ❓ **Common Issues**
+### **Common Issues**
 
 #### **Model Loading Errors**
 ```bash
@@ -824,14 +823,14 @@ python main.py --device cpu --batch_size 4
 pip install -r requirements.txt --force-reinstall
 ```
 
-### 📞 **Getting Help**
+### **Getting Help**
 1. Check logs in `outputs/logs/` and `logs/`
 2. Run validation script: `python validate_system.py`
 3. Review system documentation: `SYSTEM_DOCUMENTATION.md`
 
 ## 📈 Future Enhancements
 
-### 🎯 **Planned Features**
+### **Planned Features**
 - [ ] Real-time video stream processing
 - [ ] Mobile app interface
 - [ ] Advanced weather integration
@@ -840,17 +839,17 @@ pip install -r requirements.txt --force-reinstall
 - [ ] Historical trend analysis
 - [ ] Machine learning model auto-retraining
 
-### 🔬 **Research Opportunities**
+### **Research Opportunities**
 - Improved ensemble methods
 - Edge deployment optimization
 - Real-time sensor fusion
 - Advanced computer vision techniques
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/new-feature`)
@@ -858,7 +857,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 4. Push to the branch (`git push origin feature/new-feature`)
 5. Create a Pull Request
 
-## 📞 Contact & Support
+## Contact & Support
 
 - **Project Lead**: [Abhinav Shukla]
 - **Email**: [shukla.abhinav0204@gmail.com]
@@ -867,245 +866,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**🏔️ Built for safer mining operations and geological monitoring. This system combines cutting-edge AI with practical engineering to protect lives and infrastructure.**
-│   │   ├── random_forest_model.joblib # Random Forest classifier
-│   │   ├── neural_network_model.pth   # PyTorch neural network
-│   │   ├── main_scaler.joblib         # Feature scaler
-│   │   └── model_metadata.joblib      # Model metadata & performance
-│   │
-│   ├── 🎯 experiment_20250916_210441/  # YOLOv8 training results
-│   │   ├── weights/best.pt            # Best YOLOv8 model (99.5% mAP50)
-│   │   ├── results.png               # Training metrics
-│   │   ├── confusion_matrix.png      # Model evaluation
-│   │   └── val_batch*_pred.jpg       # Validation predictions
-│   │
-│   ├── 📊 alerts/             # Alert logs & notifications
-│   ├── 📈 logs/              # System operation logs
-│   └── 📋 *.json             # Analysis reports & results
-│
-├── 📁 sample_data/           # Test data for development
-│   ├── sensor_data/              # Sample sensor readings
-│   └── weather_data/             # Sample weather data
-│
-├── 🛠️ main.py               # Main system orchestrator
-├── 🧪 demo.py               # System demonstration script
-├── ✅ validate_system.py    # System validation & testing
-├── 📋 requirements.txt      # Python dependencies
-└── 📚 SYSTEM_DOCUMENTATION.md  # Detailed technical docs
-```
-
-## 🔄 Data Flow Architecture
-
-### 1️⃣ **Input Sources**
-```mermaid
-graph TD
-    A[Video Stream] --> D[YOLOv8 Detection]
-    B[DEM Files] --> E[Terrain Analysis]
-    C[Sensor Data] --> F[Environmental Analysis]
-    
-    D --> G[Risk Assessment Engine]
-    E --> G
-    F --> G
-    
-    G --> H[Alert System]
-    G --> I[Dashboard]
-```
-
-### 2️⃣ **Processing Pipeline**
-
-#### **🎯 Detection Pipeline**
-```
-Video Input → YOLOv8 Model → Rock Detection → Risk Calculation → Alert Generation
-```
-
-#### **🧠 Prediction Pipeline**
-```
-Environmental Data → Feature Extraction → ML Models → Risk Score → Dashboard Update
-```
-
-#### **🌍 Terrain Analysis Pipeline**
-```
-DEM Files → Slope Analysis → Feature Extraction → Risk Factors → Integration
-```
-
-### 3️⃣ **Model Architecture**
-
-#### **YOLOv8 Detection Model**
-- **Input**: Video frames/images
-- **Output**: Rock detections with confidence scores
-- **Performance**: 99.5% mAP50, 99.52% precision, 100% recall
-- **Format**: PyTorch (.pt)
-
-#### **Prediction Models Ensemble**
-- **XGBoost**: AUC 0.587, Accuracy 97.0%
-- **Random Forest**: AUC 0.627, Accuracy 97.8% (Best performer)
-- **Neural Network**: AUC 0.571, Accuracy 97.5%
-- **Ensemble**: Combined prediction for robust results
-- **Format**: Joblib (.joblib) and PyTorch (.pth)
-
-## 🚀 Quick Start Guide
-
-### 📋 **Prerequisites**
-- Python 3.8 or higher
-- 8GB+ RAM recommended
-- GPU optional (CPU supported)
-
-### ⚡ **Installation**
-
-1. **Clone the Repository**
-   ```bash
-   git clone <repository-url>
-   cd rockfall_detection
-   ```
-
-2. **Create Virtual Environment**
-   ```bash
-   python -m venv .venv
-   
-   # Windows
-   .venv\Scripts\activate
-   
-   # Linux/Mac
-   source .venv/bin/activate
-   ```
-
-3. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### 🎯 **Quick Usage Examples**
-
-#### **1. Train Models (if needed)**
-```bash
-# Train YOLOv8 detection model
-python main.py --mode train --epochs 50 --batch_size 8
-
-# Train prediction models
-python src/prediction/train_models.py
-```
-
-#### **2. Test Trained Models**
-```bash
-# Test detection model
-python main.py --mode detect --source data/rockfall_training_data/test/images/
-
-# Test prediction models  
-python src/prediction/test_models.py
-```
-
-#### **3. Launch Dashboard**
-```bash
-# Start web dashboard
-python main.py --mode dashboard
-
-# Or run enhanced dashboard
-python src/dashboard/enhanced_dashboard.py
-```
-
-#### **4. Run Complete System**
-```bash
-# Run integrated system with all components
-python main.py --mode all
-```
-
-#### **5. Start Streamlit Dashboard (Legacy)**
-```bash
-streamlit run src/dashboard/app.py
-```
-
-## 🎯 Complete System Overview
-
-### 🏗️ **System Architecture Summary**
-This rockfall detection system combines multiple cutting-edge technologies:
-
-1. **🎯 Computer Vision**: YOLOv8-powered real-time rock detection (99.5% mAP50)
-2. **🧠 Machine Learning**: Ensemble prediction models (XGBoost + Random Forest + Neural Network)
-3. **📡 Live Monitoring**: 4-directional camera surveillance system
-4. **🗺️ Geospatial Analysis**: Advanced DEM visualization with color-coded terrain mapping
-5. **🌐 Modern Web Interface**: React + FastAPI full-stack application
-6. **📊 Real-time Analytics**: WebSocket-based live data streaming
-
-### 📋 **Data Sources & Integration**
-- **🎥 Video Data**: Custom rockfall detection dataset (Roboflow) - 965 total samples
-- **🗻 DEM Files**: Three major mining sites (Bingham Canyon, Chuquicamata, Grasberg)
-- **📡 Sensor Data**: Synthetic vibration and environmental sensors
-- **🌤️ Weather Data**: Historical and real-time weather APIs integration
-- **📊 Environmental**: 19-feature risk assessment model
-
-### ⚡ **Performance Metrics**
-- **🎯 Detection Accuracy**: 99.5% mAP50, 99.52% precision, 100% recall
-- **🧠 Prediction Accuracy**: 97.8% (Random Forest), 97.5% (Neural Network)
-- **⚡ Processing Speed**: 60.8ms per frame (CPU), <1ms risk assessment
-- **🌐 Web Performance**: React 18 + Vite for fast loading, Material-UI design
-- **📡 Real-time Capability**: WebSocket streaming, live camera feeds
-
-### 🚨 **Alert & Monitoring System**
-- **📹 Video-based**: Real-time object detection with confidence thresholds
-- **📊 Sensor-based**: Vibration analysis with configurable thresholds  
-- **🧠 Risk-based**: Predictive scoring using multiple data sources
-- **📱 Multi-channel**: Web dashboard, API alerts, real-time notifications
-- **📡 Live Monitoring**: 4-camera surveillance with recording capabilities
-
-### 🎨 **User Interface Features**
-- **🎮 Interactive Dashboard**: Real-time environmental monitoring
-- **📡 Live Camera Feeds**: East/West/North/South directional surveillance
-- **🗺️ DEM Visualization**: Color-coded elevation mapping (Green→Yellow→Brown→White)
-- **🎯 Detection Interface**: Drag-and-drop rock detection
-- **⚖️ Risk Assessment**: Form-based environmental input and analysis
-- **⚙️ System Settings**: Configuration and monitoring tools
-
-### 🔌 **Integration Capabilities**
-- **🌐 RESTful APIs**: FastAPI backend with comprehensive endpoints
-- **📡 Real-time Streaming**: WebSocket support for live updates
-- **📱 Responsive Design**: Works on desktop, tablet, and mobile
-- **🔧 Extensible Architecture**: Modular design for easy feature addition
-- **📊 Data Export**: CSV/JSON reports, downloadable analysis results
-
-## 🏆 Project Achievements
-
-### ✅ **Completed Features**
-- [x] **YOLOv8 Rock Detection** - 99.5% mAP50 accuracy
-- [x] **ML Risk Prediction** - 97.8% accuracy ensemble
-- [x] **Modern Web Application** - React + FastAPI stack
-- [x] **Live Camera Monitoring** - 4-directional surveillance
-- [x] **DEM Terrain Analysis** - Color-coded visualization
-- [x] **Real-time Dashboard** - Environmental monitoring
-- [x] **API Documentation** - Comprehensive REST APIs
-- [x] **WebSocket Integration** - Live data streaming
-- [x] **Responsive Design** - Material-UI components
-
-### 🚀 **Technical Innovations**
-- **🎯 Dual AI Approach**: Object detection + predictive modeling
-- **🗺️ Advanced DEM Processing**: Rasterio + Matplotlib visualization
-- **📡 Multi-Camera Integration**: Simulated real-time feeds
-- **🌐 Full-Stack Architecture**: Modern React + FastAPI design
-- **📊 Ensemble Learning**: Combined ML models for robust predictions
-
-## 📊 License & Dataset Information
-
-- **🏗️ Code License**: MIT License - Free for commercial and personal use
-- **📊 Dataset License**: CC BY 4.0 - Custom rockfall detection dataset
-- **🎯 YOLOv8**: Ultralytics open-source license
-- **🗻 DEM Data**: Public domain elevation models from major mining sites
-
-## 🤝 Contributing & Support
-
-### 🔧 **Development Setup**
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-feature`)
-3. Follow the installation guide above
-4. Test your changes with both frontend and backend
-5. Submit a pull request with detailed description
-
-### 📞 **Getting Help**
-- **📋 Documentation**: Complete technical docs in `SYSTEM_DOCUMENTATION.md`
-- **🐛 Issues**: Report bugs via GitHub Issues
-- **💬 Discussions**: Technical questions and feature requests
-- **📧 Contact**: Project maintainers for enterprise support
-
----
-
-**🌟 Powered by YOLOv8 | 🏔️ Built for Safer Mining Operations**
-
-*This comprehensive rockfall detection system represents the cutting edge of AI-powered geological monitoring, combining computer vision, machine learning, and modern web technologies to protect lives and infrastructure in mining operations worldwide.*
