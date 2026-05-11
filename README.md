@@ -136,24 +136,7 @@ rockfall_detection/
 ├── validate_system.py    # System validation & testing
 ├── requirements.txt      # Python dependencies (includes rasterio, matplotlib)
 └── SYSTEM_DOCUMENTATION.md  # Detailed technical docs
-```
-│   │   ├── confusion_matrix.png      # Model evaluation
-│   │   └── val_batch*_pred.jpg       # Validation predictions
-│   │
-│   ├── 📊 alerts/             # Alert logs & notifications
-│   ├── 📈 logs/              # System operation logs
-│   └── 📋 *.json             # Analysis reports & results
-│
-├── 📁 sample_data/           # Test data for development
-│   ├── sensor_data/              # Sample sensor readings
-│   └── weather_data/             # Sample weather data
-│
-├── 🛠️ main.py               # Main system orchestrator
-├── 🧪 demo.py               # System demonstration script
-├── ✅ validate_system.py    # System validation & testing
-├── 📋 requirements.txt      # Python dependencies
-└── 📚 SYSTEM_DOCUMENTATION.md  # Detailed technical docs
-```
+
 
 ## Data Flow Architecture
 
