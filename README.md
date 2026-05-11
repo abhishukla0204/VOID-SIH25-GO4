@@ -137,20 +137,17 @@ rockfall_detection/
 ├── requirements.txt      # Python dependencies (includes rasterio, matplotlib)
 └── SYSTEM_DOCUMENTATION.md  # Detailed technical docs
 
-
+```
 ## Data Flow Architecture
 
-### 1️**Input Sources**
-```mermaid
+### 1️Input Sources
 graph TD
     A[Video Stream] --> D[YOLOv8 Detection]
     B[DEM Files] --> E[Terrain Analysis]
     C[Sensor Data] --> F[Environmental Analysis]
-    
     D --> G[Risk Assessment Engine]
     E --> G
     F --> G
-    
     G --> H[Alert System]
     G --> I[Dashboard]
 ```
